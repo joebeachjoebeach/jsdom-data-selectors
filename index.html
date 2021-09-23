@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <title>performance of selectors</title>
+</head>
+
+<body>
+    <div>Hello there</div>
+    <script>
+        const idTemplate = (id) => `elem-${id}`;
+        const divTemplate = (id) => `
+    <div id="${idTemplate(id)}" data-ui="${idTemplate(id)}">This is div ${id}</div>
+`;
+        const dataSelectorTemplate = (id) => `[data-ui="${idTemplate(id)}"]`;
+        document.addEventListener("DOMContentLoaded", () => {
+            let divs = "";
+            const dataSelectors = [];
+            const idSelectors = [];
+
+            for (let i = 0; i < 500; i++) {
+                const id = i.toString();
+                divs += divTemplate(id);
+                dataSelectors.push(dataSelectorTemplate(id));
+                idSelectors.push(idTemplate(id));
+            }
+
+            document.body.innerHTML = `<div>${divs}</div>`;
+
+            console.time("data selector time:");
+            dataSelectors.forEach((selector) => {
+                document.querySelector(selector);
+            });
+            console.timeEnd("data selector time:");
+
+            console.time("id selector time:");
+            idSelectors.forEach((id) => {
+                document.getElementById(id);
+            });
+            console.timeEnd("id selector time:");
+        });
+    </script>
+</body>
+
+</html>
